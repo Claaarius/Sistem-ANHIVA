@@ -12,6 +12,7 @@ class Konseling extends Model
     protected $fillable = [
         'id_pengguna',
         'kode_unik',
+        'jenis_kelamin',
         'alasan',
         'jenis',
         'nomor_kontak',

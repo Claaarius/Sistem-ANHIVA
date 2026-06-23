@@ -12,6 +12,7 @@
         <div class="card-body">
             <div class="result-detail"><span class="label">Kode Unik</span><span class="value" style="font-family:monospace;color:var(--teal-400);">{{ $konseling->kode_unik }}</span></div>
             <div class="result-detail"><span class="label">Jenis</span><span class="value">{{ $konseling->jenis }}</span></div>
+            <div class="result-detail"><span class="label">Jenis Kelamin</span><span class="value">{{ $konseling->jenis_kelamin ?? '-' }}</span></div>
             <div class="result-detail"><span class="label">Alasan</span><span class="value">{{ $konseling->alasan }}</span></div>
             <div class="result-detail"><span class="label">Nomor Kontak</span><span class="value">{{ $konseling->nomor_kontak ?? '-' }}</span></div>
             <div class="result-detail"><span class="label">Tanggal Pengajuan</span><span class="value">{{ $konseling->tanggal_pengajuan->format('d M Y') }}</span></div>

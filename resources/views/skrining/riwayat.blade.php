@@ -19,7 +19,15 @@
                 <p style="color:var(--gray-400); margin-bottom:var(--space-lg);">Masukkan kode unik ANH-XXXXXXXXXX yang Anda dapatkan saat melakukan skrining untuk melihat riwayat.</p>
                 <form method="GET" action="{{ route('skrining.riwayat') }}" style="max-width:400px; margin:0 auto;">
                     <div class="form-group">
-                        <input type="text" name="kode_unik" class="form-control" placeholder="ANH-XXXXXXXXXX" style="text-align:center; font-size:1.1rem; font-family:monospace;" required pattern="ANH-[A-Za-z0-9]{6}">
+                        <input type="text" name="kode_unik" class="form-control" placeholder="ANH-XXXXXXXXXX" style="text-align:center; font-size:1.1rem; font-family:monospace;" required pattern="ANH-[A-Za-z0-9]{10}">
+                        
+                        @error('kode_unik')
+                            <div style="color:#dc2626; margin-top:8px; font-size:0.9rem;">
+                            <i class="fas fa-exclamation-circle"></i>
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Cari Riwayat</button>
                 </form>
@@ -44,7 +52,7 @@
                     <tbody>
                         @foreach($riwayat as $r)
                         <tr>
-                            <td>{{ $r->tanggal_skrining->format('d M Y, H:i') }}</td>
+                            <td>{{ $r->tanggal_skrining->format('d M Y') }}</td>
                             <td><code style="color:var(--teal-400);">{{ $r->kode_unik }}</code></td>
                             <td><strong>{{ $r->skor_total }}</strong></td>
                             <td><span class="badge {{ $r->risiko_badge_class }}">{{ $r->tingkat_risiko }}</span></td>

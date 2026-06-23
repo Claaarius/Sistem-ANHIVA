@@ -91,8 +91,7 @@
                         <i class="fas fa-user-circle"></i> Kelola Akun
                     </a>
 
-                    <a href="{{ route('admin.logout') }}" class="admin-nav-link"
-                       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
+                    <a href="#" class="admin-nav-link" onclick="confirmAdminLogout(event)">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
 
@@ -171,6 +170,24 @@
     @endif
 
     <script>
+        function confirmAdminLogout(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari halaman admin?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1D9E75',
+                cancelButtonColor: '#888780',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('admin-logout-form').submit();
+                }
+            });
+        }
+
         function handleSidebarToggle() {
             const sidebarToggle = document.getElementById('sidebarToggle');
 

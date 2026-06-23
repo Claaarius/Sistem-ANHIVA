@@ -3,26 +3,36 @@
 
 @section('content')
 <!-- Section 1: Hero -->
-<section class="hero" style="position:relative; min-height:70vh; display:flex; align-items:center; padding:var(--space-2xl) 0;">
-    <div class="container" style="display:flex; align-items:center; justify-content:space-between; position:relative; z-index:2;">
-        <div class="hero-content slide-up" style="max-width:600px;">
-            <h1 style="font-size:2.4rem;">{{ $hero->judul ?? 'ANHIVA' }}</h1>
-            <p>{{ $hero->konten ?? 'Sistem Edukasi dan Skrining Risiko HIV Berbasis Anonim. Lindungi diri Anda dengan pengetahuan yang tepat dan skrining risiko.' }}</p>
-            <a href="{{ route('skrining.index') }}" class="btn btn-primary btn-lg" style="box-shadow:var(--shadow-md);">
-                <i class="fas fa-clipboard-list"></i> {{ $hero->tombol_teks ?? 'Mulai Skrining' }}
+<!-- Hero section diatur agar selalu fullscreen (height: 100vh), dengan minimal tinggi 600px agar aman di layar kecil. -->
+<!-- Display flex dan justify-content: center memastikan hero dan kontennya berada di tengah secara vertikal dan horizontal. -->
+<section class="hero" style="position:relative; width:100%; height:100vh; min-height:600px; display:flex; align-items:center; background: linear-gradient(135deg, var(--teal-600), var(--teal-800)); overflow:hidden; color: white;">
+    
+    <!-- Wrapper container utama -->
+    <div class="container" style="position:relative; z-index:2; width:100%; display:flex; align-items:center; justify-content:space-between;">
+        
+        <!-- Konten Hero (Kiri) -->
+        <div class="hero-content slide-up" style="max-width:600px; width:100%; text-align:left;">
+            <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight:800; margin-bottom: 24px; color:white; line-height:1.1;">{{ $hero->judul ?? 'ANHIVA' }}</h1>
+            <p style="font-size: clamp(1.1rem, 2.5vw, 1.25rem); margin-bottom: 40px; color:rgba(255,255,255,0.9); line-height:1.6;">{{ $hero->konten ?? 'Sistem Edukasi dan Skrining Risiko HIV Berbasis Anonim. Lindungi diri Anda dengan pengetahuan yang tepat dan skrining risiko secara anonim.' }}</p>
+            
+            <a href="{{ route('skrining.index') }}" class="btn" style="background-color: white; color: var(--teal-800); font-weight:700; box-shadow:0 10px 25px rgba(0,0,0,0.1); padding: 14px 36px; font-size: 1.1rem; border-radius: 999px; transition:all 0.3s ease; display:inline-flex; align-items:center; gap:10px; text-decoration:none;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.1)';">
+                <i class="fas fa-clipboard-list" style="font-size:1.2rem;"></i> {{ $hero->tombol_teks ?? 'Mulai Skrining' }}
             </a>
-            <div style="margin-top:var(--space-2xl); opacity:0.8; font-size:0.9rem;">
-                <span>Scroll ke bawah untuk informasi lebih lanjut <i class="fas fa-arrow-down floating-shape" style="margin-left:8px;"></i></span>
+            
+            <div style="margin-top: 60px; opacity:0.8; font-size:0.95rem;">
+                <span>Scroll ke bawah untuk informasi lebih lanjut <i class="fas fa-arrow-down floating-shape" style="margin-left:8px; display:inline-block;"></i></span>
             </div>
         </div>
-        <!-- Decorative Icon -->
-        <div class="hero-image floating-shape" style="opacity:0.2; transform:scale(1.5);">
-            <svg width="300" height="300" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <path d="M12 8v4"></path>
-                <path d="M10 10h4"></path>
-            </svg>
-        </div>
+        
+    </div>
+
+    <!-- Decorative Icon (Background) di sisi kanan -->
+    <div class="hero-image floating-shape" style="position:absolute; right:-5%; top:50%; transform:translateY(-50%); opacity:0.1; z-index:1; pointer-events:none;">
+        <svg width="600" height="600" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" style="width: 50vw; height: auto; max-width: 600px; min-width: 300px;">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M12 8v4"></path>
+            <path d="M10 10h4"></path>
+        </svg>
     </div>
 </section>
 
@@ -36,22 +46,22 @@
         </div>
 
         <div class="grid grid-4" style="margin-bottom: var(--space-3xl);">
-            <div class="stat-card" style="padding:var(--space-xl) var(--space-lg);">
+            <div class="stat-card">
                 <div class="stat-icon teal" style="background:linear-gradient(135deg, var(--teal-50), white);"><i class="fas fa-clipboard-check"></i></div>
                 <div class="stat-number count-anim" data-target="{{ $totalSkrining ?? 0 }}">0</div>
                 <div class="stat-label">Total Skrining</div>
             </div>
-            <div class="stat-card" style="padding:var(--space-xl) var(--space-lg);">
+            <div class="stat-card">
                 <div class="stat-icon teal" style="background:linear-gradient(135deg, var(--teal-50), white);"><i class="fas fa-chart-pie"></i></div>
                 <div class="stat-number">{{ ($distribusiRisiko['rendah']??0) }}/{{ ($distribusiRisiko['sedang']??0) }}/{{ ($distribusiRisiko['tinggi']??0) }}</div>
                 <div class="stat-label">Rendah / Sedang / Tinggi</div>
             </div>
-            <div class="stat-card" style="padding:var(--space-xl) var(--space-lg);">
+            <div class="stat-card">
                 <div class="stat-icon amber" style="background:linear-gradient(135deg, var(--amber-50), white);"><i class="fas fa-users"></i></div>
                 <div class="stat-number count-anim" data-target="{{ $totalPengguna ?? 0 }}">0</div>
                 <div class="stat-label">Pengguna Terdaftar</div>
             </div>
-            <div class="stat-card" style="padding:var(--space-xl) var(--space-lg);">
+            <div class="stat-card">
                 <div class="stat-icon amber" style="background:linear-gradient(135deg, var(--amber-50), white);"><i class="fas fa-book-open"></i></div>
                 <div class="stat-number count-anim" data-target="{{ $totalMateri ?? 0 }}">0</div>
                 <div class="stat-label">Materi Edukasi</div>
@@ -87,7 +97,7 @@
                         $nomorFakta = ($pageIndex * 4) + $index + 1;
                     @endphp
 
-                    <div class="fact-card" style="position:relative; padding:var(--space-2xl); border-left:4px solid var(--amber-400); box-shadow:var(--shadow-sm); min-height:220px;">
+                    <div class="fact-card" style="position:relative; padding:var(--space-xl); border-left:4px solid var(--amber-400); box-shadow:var(--shadow-sm); min-height:180px;">
                         <div style="position:absolute; top:0; left:12px; font-size:3rem; font-weight:900; color:var(--amber-100); line-height:1; z-index:0;">
                             {{ str_pad($nomorFakta, 2, '0', STR_PAD_LEFT) }}
                         </div>
@@ -206,19 +216,46 @@
             <div class="section-line"></div>
         </div>
 
-        <div class="gallery-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:1rem;">
-            @foreach($gallery as $g)
-            <div class="gallery-item" style="position:relative; overflow:hidden; border-radius:var(--radius-md); cursor:pointer; height:200px;"
-                 onclick="showGalleryLightbox('{{ $g->foto }}', '{{ addslashes($g->keterangan) }}')"
-                 onmouseover="this.querySelector('img').style.transform='scale(1.1)'; this.querySelector('.gallery-caption').style.bottom='0';"
-                 onmouseout="this.querySelector('img').style.transform='scale(1)'; this.querySelector('.gallery-caption').style.bottom='-100%';">
-                <img src="{{ $g->foto }}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23E1F5EE\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%231D9E75\' font-size=\'48\'%3E📷%3C/text%3E%3C/svg%3E';" alt="{{ $g->keterangan }}" style="width:100%; height:100%; object-fit:cover; transition:transform 0.5s;">
-                <div class="gallery-caption" style="position:absolute; bottom:-100%; left:0; width:100%; background:rgba(0,0,0,0.7); color:white; padding:10px; transition:bottom 0.3s; font-size:0.85rem;">
-                    {{ $g->keterangan }}
+        <div style="position:relative; width:100%; margin-top:var(--space-xl);">
+            <!-- Left Navigation Button -->
+            @if($gallery->count() > 4)
+            <button type="button" onclick="changeGalleryPage(-1)" style="position:absolute; left:0; top:0; bottom:0; width:45px; z-index:10; border:none; background:rgba(0,0,0,0.08); color:rgba(0,0,0,0.4); font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.3s ease; border-radius:var(--radius-md) 0 0 var(--radius-md);" onmouseover="this.style.background='rgba(0,0,0,0.2)'; this.style.color='rgba(0,0,0,0.8)';" onmouseout="this.style.background='rgba(0,0,0,0.08)'; this.style.color='rgba(0,0,0,0.4)';">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            @endif
+
+            <!-- Gallery Content Wrapper with Padding -->
+            <div style="padding: 0 55px;">
+                @foreach($gallery->values()->chunk(4) as $pageIndex => $galleryPage)
+                <div class="gallery-grid gallery-page {{ $pageIndex === 0 ? 'active' : '' }}" data-gallery-page="{{ $pageIndex }}" style="display:{{ $pageIndex === 0 ? 'grid' : 'none' }}; grid-template-columns:repeat(4, 1fr); gap:1rem;">
+                    @foreach($galleryPage as $g)
+                    <div class="gallery-item" style="position:relative; overflow:hidden; border-radius:var(--radius-md); cursor:pointer; height:200px;"
+                         onclick="showGalleryLightbox('{{ $g->foto }}', '{{ addslashes($g->keterangan) }}')"
+                         onmouseover="this.querySelector('img').style.transform='scale(1.1)'; this.querySelector('.gallery-caption').style.bottom='0';"
+                         onmouseout="this.querySelector('img').style.transform='scale(1)'; this.querySelector('.gallery-caption').style.bottom='-100%';">
+                        <img src="{{ $g->foto }}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23E1F5EE\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%231D9E75\' font-size=\'48\'%3E📷%3C/text%3E%3C/svg%3E';" alt="{{ $g->keterangan }}" style="width:100%; height:100%; object-fit:cover; transition:transform 0.5s;">
+                        <div class="gallery-caption" style="position:absolute; bottom:-100%; left:0; width:100%; background:rgba(0,0,0,0.7); color:white; padding:10px; transition:bottom 0.3s; font-size:0.85rem;">
+                            {{ $g->keterangan }}
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
+                @endforeach
             </div>
-            @endforeach
+
+            <!-- Right Navigation Button -->
+            @if($gallery->count() > 4)
+            <button type="button" onclick="changeGalleryPage(1)" style="position:absolute; right:0; top:0; bottom:0; width:45px; z-index:10; border:none; background:rgba(0,0,0,0.08); color:rgba(0,0,0,0.4); font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.3s ease; border-radius:0 var(--radius-md) var(--radius-md) 0;" onmouseover="this.style.background='rgba(0,0,0,0.2)'; this.style.color='rgba(0,0,0,0.8)';" onmouseout="this.style.background='rgba(0,0,0,0.08)'; this.style.color='rgba(0,0,0,0.4)';">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            @endif
         </div>
+
+        @if($gallery->count() > 4)
+        <div class="text-center" style="margin-top:var(--space-lg); color:var(--gray-400); font-size:0.9rem;">
+            <span id="galleryPageInfo">1</span> / {{ ceil($gallery->count() / 4) }}
+        </div>
+        @endif
     </div>
 </section>
 @endif
@@ -336,7 +373,7 @@
             <form method="POST" action="{{ route('komentar.store') }}">
                 @csrf
                 <div class="form-group">
-                    <textarea name="isi_komentar" class="form-control" rows="5" placeholder="Tulis pengalaman atau testimoni Anda di sini..." required maxlength="1000" style="font-size:1rem; padding:var(--space-md);"></textarea>
+                    <textarea name="isi_komentar" class="form-control" rows="5" placeholder="Tulis pengalaman atau testimoni Anda di sini..." required maxlength="10000" style="font-size:1rem; padding:var(--space-md);"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg btn-block" style="font-size:1.1rem;">Kirim Komentar</button>
             </form>
@@ -556,6 +593,30 @@ function toggleEditComment(id) {
         el.style.display = 'none';
         textEl.style.display = 'block';
     }
+}
+
+let currentGalleryPage = 0;
+function changeGalleryPage(direction) {
+    const pages = document.querySelectorAll('.gallery-page');
+    if (pages.length === 0) return;
+
+    pages[currentGalleryPage].style.display = 'none';
+    pages[currentGalleryPage].classList.remove('active');
+
+    currentGalleryPage += direction;
+
+    if (currentGalleryPage < 0) {
+        currentGalleryPage = pages.length - 1;
+    }
+    if (currentGalleryPage >= pages.length) {
+        currentGalleryPage = 0;
+    }
+
+    pages[currentGalleryPage].style.display = 'grid';
+    pages[currentGalleryPage].classList.add('active');
+
+    const info = document.getElementById('galleryPageInfo');
+    if (info) info.innerText = currentGalleryPage + 1;
 }
 
 // Detail Komentar

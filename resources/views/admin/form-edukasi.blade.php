@@ -41,6 +41,13 @@
                 </div>
             </div>
 
+            <div class="form-group" style="margin-bottom:var(--space-md);">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <input type="checkbox" name="tampilkan_di_dashboard" value="1" {{ old('tampilkan_di_dashboard', $materi->tampilkan_di_dashboard ?? false) ? 'checked' : '' }}>
+                    <span style="font-weight:600; color:var(--teal-800);">Tampilkan di Dashboard Utama (Materi Terbaru)</span>
+                </label>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Isi Materi *</label>
                 <div id="quillEditor" style="min-height:300px;">{!! old('isi_materi', $materi->isi_materi ?? '') !!}</div>

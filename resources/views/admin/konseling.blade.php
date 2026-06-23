@@ -8,7 +8,7 @@
        class="btn btn-sm {{ !request('status') ? 'btn-primary' : 'btn-outline' }}">
         Semua
     </a>
-    @foreach(['Menunggu', 'Dijadwalkan', 'Menunggu Reschedule', 'Selesai'] as $s)
+    @foreach(['Menunggu', 'Dijadwalkan', 'Rujukan', 'Menunggu Reschedule', 'Selesai'] as $s)
     <a href="{{ route('admin.konseling.index', ['status' => $s]) }}"
        class="btn btn-sm {{ request('status') == $s ? 'btn-primary' : 'btn-outline' }}">
         {{ $s }}
@@ -30,6 +30,7 @@
             <tr>
                 <th>Kode Unik</th>
                 <th>Jenis</th>
+                <th>Jenis Kelamin</th>
                 <th>Status</th>
                 <th>Tanggal</th>
                 <th>Jadwal</th>
@@ -41,7 +42,13 @@
             <tr>
                 <td><code style="color:var(--teal-400);">{{ $k->kode_unik }}</code></td>
                 <td>{{ $k->jenis }}</td>
-                <td><span class="badge {{ $k->status_badge_class }}">{{ $k->status }}</span></td>
+                <td>{{ $k->jenis_kelamin ?? '-' }}</td>
+                <td>
+                    <span class="badge {{ $k->status_badge_class }}">{{ $k->status }}</span>
+                    @if($k->status === 'Selesai' && $k->rujukan && $k->rujukan->count() > 0)
+                    <br><span class="badge badge-amber" style="margin-top:4px; font-size:0.7rem;"><i class="fas fa-hospital"></i> Ada Rujukan</span>
+                    @endif
+                </td>
                 <td>{{ $k->tanggal_pengajuan->format('d M Y') }}</td>
                 <td>{{ $k->jadwal_konseling ? $k->jadwal_konseling->format('d M Y H:i') : '-' }}</td>
                 <td>

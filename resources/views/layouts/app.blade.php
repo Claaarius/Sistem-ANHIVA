@@ -43,8 +43,7 @@
                         {{ auth()->user()->username }}
                     </span>
                     <a href="{{ route('akun.index') }}" class="btn btn-sm btn-outline" style="margin-right:8px;">Kelola Akun</a>
-                    <a href="{{ route('logout') }}" class="btn btn-sm btn-outline"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="#" class="btn btn-sm btn-outline" onclick="confirmUserLogout(event)">
                         Logout
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
@@ -97,7 +96,7 @@
                 <div>
                     <h4>Informasi</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Tentang ANHIVA</a></li>
+                        <li><a href="{{ route('tentang') }}">Tentang ANHIVA</a></li>
                         <li><a href="#">Kebijakan Privasi</a></li>
                         <li><a href="#">Disclaimer</a></li>
                     </ul>
@@ -110,29 +109,98 @@
     </footer>
 
     <script>
+        function confirmUserLogout(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1D9E75',
+                cancelButtonColor: '#888780',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal',
+
+                allowOutsideClick: true,
+                allowEscapeKey: true
+                
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            });
+        }
+
         function toggleMenu() {
             document.getElementById('navMenu').classList.toggle('active');
         }
     </script>
+
     @if(session()->has('skrining_pertanyaan'))
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        let popupSudahMuncul = false;
+
         document.querySelectorAll('a').forEach(function(link) {
             var href = link.getAttribute('href');
             if (!href) return;
             if (href.includes('skrining')) return;
             if (href.startsWith('#')) return;
             if (href.startsWith('javascript')) return;
-            if (link.closest('.navbar-actions')) return; // allow account/logout
+            if (link.closest('.navbar-actions')) return;
+
             link.addEventListener('click', function(e) {
-                if (!confirm('Anda sedang dalam proses skrining. Yakin akan meninggalkan halaman ini?')) {
-                    e.preventDefault();
+
+            if (popupSudahMuncul) {
+                e.preventDefault();
+                return;
+
                 }
+
+                e.preventDefault();
+                popupSudahMuncul = true;
+
+                Swal.fire({
+                    title: 'Tinggalkan Skrining?',
+                    text: 'Anda sedang dalam proses skrining. Yakin akan meninggalkan halaman ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1D9E75',
+                    cancelButtonColor: '#888780',
+                    confirmButtonText: 'Ya, Tinggalkan',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+
+    if (result.isConfirmed) {
+
+        fetch('{{ route("skrining.batalkan.session") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.location.href = href;
+        })
+        .catch(() => {
+            window.location.href = href;
+        });
+
+    } else {
+
+        popupSudahMuncul = false;
+
+    }
+
+});
             });
         });
     });
     </script>
     @endif
+
     @stack('scripts')
 </body>
 </html>

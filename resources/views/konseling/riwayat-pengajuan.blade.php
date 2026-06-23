@@ -43,6 +43,7 @@
                             
                             <div style="color:var(--gray-400); font-size:0.95rem; margin-bottom:var(--space-md);">
                                 <strong>Topik:</strong> {{ $k->alasan }} <br>
+                                <strong>Jenis Kelamin:</strong> {{ $k->jenis_kelamin ?? '-' }} <br>
                                 <strong>Metode:</strong> {{ $k->jenis }} <br>
                                 @if($k->jadwal_konseling)
                                     <strong>Jadwal Konseling:</strong> {{ \Carbon\Carbon::parse($k->jadwal_konseling)->format('d M Y, H:i') }} <br>

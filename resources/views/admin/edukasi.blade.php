@@ -30,7 +30,12 @@
                         </div>
                     @endif
                 </td>
-                <td><strong>{{ $m->judul }}</strong></td>
+                <td>
+                    <strong>{{ $m->judul }}</strong>
+                    @if($m->tampilkan_di_dashboard)
+                    <br><span class="badge badge-amber" style="font-size:0.7rem;"><i class="fas fa-star"></i> Tampil di Dashboard</span>
+                    @endif
+                </td>
                 <td><span class="badge badge-teal">{{ $m->kategori }}</span></td>
                 <td>{{ $m->tanggal_publish->format('d M Y') }}</td>
                 <td>

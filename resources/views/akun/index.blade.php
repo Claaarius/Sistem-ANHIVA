@@ -84,6 +84,20 @@
                         <h4 style="margin:0;"><i class="fas fa-key" style="color:var(--teal-400);"></i> Ganti Password</h4>
                     </div>
                     <div class="card-body">
+                        @if(session('success'))
+                            <div style="background:var(--success-bg); color:var(--success-text); padding:var(--space-md); border-radius:var(--radius-md); margin-bottom:var(--space-md); border-left:4px solid var(--success-text);">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if($errors->any())
+                            <div style="background:var(--risk-high-bg); color:var(--risk-high-text); padding:var(--space-md); border-radius:var(--radius-md); margin-bottom:var(--space-md); border-left:4px solid var(--risk-high-text);">
+                                <ul style="margin:0; padding-left:20px;">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <form action="{{ route('akun.password') }}" method="POST">
                             @csrf @method('PUT')
                             <div class="form-group" style="position:relative;">
@@ -92,6 +106,9 @@
                                     <input type="password" name="current_password" id="current_password" class="form-control" required style="padding-right:40px;">
                                     <button type="button" onclick="togglePassword('current_password', 'toggle-curr')" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--gray-400); cursor:pointer;"><i class="fas fa-eye" id="toggle-curr"></i></button>
                                 </div>
+                                @error('current_password')
+                                    <div style="color:#C53030; font-size:0.9rem; margin-top:0.5rem;">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="grid grid-2">
                                 <div class="form-group" style="position:relative;">
@@ -100,6 +117,9 @@
                                         <input type="password" name="password" id="password_new" class="form-control" required placeholder="Min 8, maks 20 karakter" maxlength="20" style="padding-right:40px;">
                                         <button type="button" onclick="togglePassword('password_new', 'toggle-new')" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--gray-400); cursor:pointer;"><i class="fas fa-eye" id="toggle-new"></i></button>
                                     </div>
+                                    @error('password')
+                                        <div style="color:#C53030; font-size:0.9rem; margin-top:0.5rem;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="form-group" style="position:relative;">
                                     <label class="form-label">Konfirmasi Password Baru</label>
@@ -107,6 +127,9 @@
                                         <input type="password" name="password_confirmation" id="password_conf" class="form-control" required maxlength="20" style="padding-right:40px;">
                                         <button type="button" onclick="togglePassword('password_conf', 'toggle-conf')" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--gray-400); cursor:pointer;"><i class="fas fa-eye" id="toggle-conf"></i></button>
                                     </div>
+                                    @error('password_confirmation')
+                                        <div style="color:#C53030; font-size:0.9rem; margin-top:0.5rem;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Ubah Password</button>

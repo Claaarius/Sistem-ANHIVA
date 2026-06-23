@@ -34,7 +34,7 @@
 
         <div class="card">
             <div class="card-body" style="padding:var(--space-2xl);">
-                <form method="POST" action="{{ route('konseling.store') }}">
+                <form id="konseling-form" method="POST" action="{{ route('konseling.store') }}">
                     @csrf
                     
                     <h4 class="mb-md"><i class="fas fa-handshake text-teal"></i> Pilih Metode Konseling</h4>
@@ -63,6 +63,19 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label" for="jenis_kelamin">Jenis Kelamin *</label>
+                        <select id="jenis_kelamin" name="jenis_kelamin" class="form-control" required>
+                            <option value="" {{ old('jenis_kelamin') === null ? 'selected' : '' }}>Pilih jenis kelamin</option>
+                            <option value="Laki-laki" {{ old('jenis_kelamin') === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jenis_kelamin') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            <option value="Non-binary" {{ old('jenis_kelamin') === 'Non-binary' ? 'selected' : '' }}>Non-binary</option>
+                        </select>
+                        @error('jenis_kelamin')
+                            <small class="form-hint" style="color:#dc2626;">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label" for="nomor_kontak">Nomor yang Dapat Dihubungi (Opsional)</label>
                         <input type="tel" id="nomor_kontak" name="nomor_kontak" class="form-control" placeholder="08xxxxxxxx" value="{{ old('nomor_kontak') }}" pattern="[0-9]*" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                     </div>
@@ -75,7 +88,13 @@
                     </div>
                     @endif
 
-                    <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fas fa-paper-plane"></i> Kirim Pengajuan</button>
+                    
+                    <div id="jenis-error" style="display:none; color:#dc2626; font-size:0.9rem; margin-bottom:var(--space-md);">
+                        <i class="fas fa-exclamation-circle"></i> Silakan pilih metode konseling terlebih dahulu.
+                    </div>
+                    <button type="button" onclick="submitKonseling()" class="btn btn-primary btn-lg btn-block">
+                            <i class="fas fa-paper-plane"></i> Kirim Pengajuan
+                    </button>
                 </form>
             </div>
         </div>
@@ -87,15 +106,45 @@
 <script>
 function updateKonselingType() {
     const cards = document.querySelectorAll('.konseling-type-card');
+    let isOnline = false;
     cards.forEach(card => {
         const input = card.querySelector('input');
         if(input.checked) {
             card.classList.add('selected');
+            if (input.value === 'Online') {
+                isOnline = true;
+            }
         } else {
             card.classList.remove('selected');
         }
     });
+
+    const nomorKontak = document.getElementById('nomor_kontak');
+    const label = document.querySelector('label[for="nomor_kontak"]');
+    if (nomorKontak && label) {
+        if (isOnline) {
+            nomorKontak.required = true;
+            label.innerHTML = 'Nomor yang Dapat Dihubungi *';
+        } else {
+            nomorKontak.required = false;
+            label.innerHTML = 'Nomor yang Dapat Dihubungi (Opsional)';
+        }
+    }
 }
+
+function submitKonseling() {
+    const selected = document.querySelector('input[name="jenis"]:checked');
+    if (!selected) {
+        document.getElementById('jenis-error').style.display = 'block';
+        document.querySelectorAll('.konseling-type-card').forEach(card => {
+            card.style.borderColor = '#dc2626';
+        });
+        return;
+    }
+    document.getElementById('jenis-error').style.display = 'none';
+    document.getElementById('konseling-form').submit();
+}
+
 // Init selection
 updateKonselingType();
 
@@ -103,7 +152,20 @@ updateKonselingType();
 Swal.fire({
     icon: 'success',
     title: 'Berhasil',
-    text: 'Pengajuan konseling berhasil dikirim!',
+    html: `
+        <p>Pengajuan konseling berhasil dikirim!</p>
+
+        @if(!auth()->check())
+            <div style="margin-top:15px;">
+                <strong>Kode Unik Anda:</strong><br>
+                <span style="font-size:20px;font-weight:bold;color:#1D9E75;">
+                    {{ session('kode_unik') }}
+                </span>
+                <br><br>
+                Simpan kode ini untuk mengecek status dan jadwal konseling Anda.
+            </div>
+        @endif
+    `,
     confirmButtonText: 'OK'
 }).then(() => {
     window.location.href = '{{ url('/konseling/riwayat') }}';
@@ -175,19 +237,5 @@ Swal.fire({
     box-shadow: var(--shadow-sm);
 }
 
-.konseling-steps-grid .step-card:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    right: -20px;
-    width: 40px;
-    border-top: 2px dashed var(--teal-200);
-}
-
-@media (max-width: 992px) {
-    .konseling-steps-grid .step-card:not(:last-child)::after {
-        display: none;
-    }
-}
 </style>
 @endpush

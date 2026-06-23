@@ -16,20 +16,13 @@
                 @method('PUT')
                 
                 <div class="form-group">
-                    <label class="form-label" for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" value="{{ Auth::guard('admin')->user()->username }}" required>
+                    <label class="form-label" for="nama_admin">Nama Admin</label>
+                    <input type="text" id="nama_admin" name="nama_admin" class="form-control" value="{{ Auth::guard('admin')->user()->nama_admin }}" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="email">Email</label>
                     <input type="email" id="email" name="email" class="form-control" value="{{ Auth::guard('admin')->user()->email }}" required>
-                </div>
-                
-                <!-- Display Only Field for Nama Admin -->
-                <div class="form-group">
-                    <label class="form-label">Nama Admin</label>
-                    <input type="text" class="form-control" value="{{ Auth::guard('admin')->user()->nama_admin }}" disabled style="background:var(--gray-50);">
-                    <small class="text-secondary">Hubungi Super Admin jika ingin mengubah nama.</small>
                 </div>
 
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Profil</button>
@@ -43,6 +36,16 @@
             <h4 style="margin:0;"><i class="fas fa-key text-teal"></i> Ganti Password</h4>
         </div>
         <div class="card-body">
+            @if(session('success'))
+                <div style="background:var(--success-bg); color:var(--success-text); padding:var(--space-md); border-radius:var(--radius-md); margin-bottom:var(--space-md); border-left:4px solid var(--success-text);">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div style="background:var(--risk-high-bg); color:var(--risk-high-text); padding:var(--space-md); border-radius:var(--radius-md); margin-bottom:var(--space-md); border-left:4px solid var(--risk-high-text);">
+                    {{ session('error') }}
+                </div>
+            @endif
             @if($errors->any())
             <div style="background:var(--risk-high-bg); color:var(--risk-high-text); padding:var(--space-md); border-radius:var(--radius-md); margin-bottom:var(--space-md); border-left:4px solid var(--risk-high-text);">
                 <ul style="margin:0; padding-left:20px;">
@@ -65,6 +68,9 @@
                             <i class="fas fa-eye" id="toggleIcon1"></i>
                         </button>
                     </div>
+                    @error('current_password')
+                        <div style="color:#C53030; font-size:0.9rem; margin-top:0.5rem;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group" style="position:relative;">
@@ -75,6 +81,9 @@
                             <i class="fas fa-eye" id="toggleIcon2"></i>
                         </button>
                     </div>
+                    @error('password')
+                        <div style="color:#C53030; font-size:0.9rem; margin-top:0.5rem;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group" style="position:relative;">
@@ -85,6 +94,9 @@
                             <i class="fas fa-eye" id="toggleIcon3"></i>
                         </button>
                     </div>
+                    @error('password_confirmation')
+                        <div style="color:#C53030; font-size:0.9rem; margin-top:0.5rem;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <button type="submit" class="btn btn-amber"><i class="fas fa-lock"></i> Perbarui Password</button>

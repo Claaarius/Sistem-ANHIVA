@@ -25,7 +25,7 @@
                 </div>
                 <div class="result-detail">
                     <span class="label">Tanggal Skrining</span>
-                    <span class="value">{{ $skrining->tanggal_skrining->format('d M Y, H:i') }}</span>
+                    <span class="value">{{ $skrining->tanggal_skrining->format('d M Y') }}</span>
                 </div>
                 <div class="result-detail">
                     <span class="label">Skor Total</span>
@@ -99,7 +99,7 @@ function downloadPDF() {
     let y = 55;
     const data = [
         ['Kode Unik', '{{ $skrining->kode_unik }}'],
-        ['Tanggal Skrining', '{{ $skrining->tanggal_skrining->format("d M Y, H:i") }}'],
+        ['Tanggal Skrining', '{{ $skrining->tanggal_skrining->format("d M Y") }}'],
         ['Skor Total', '{{ $skrining->skor_total }}'],
         ['Tingkat Risiko', '{{ $skrining->tingkat_risiko }}'],
     ];

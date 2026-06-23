@@ -63,11 +63,15 @@ class AdminManagementController extends Controller
         $admin = Admin::findOrFail($adminId);
 
         if (!Hash::check($request->current_password, $admin->password)) {
-            return back()->with('error', 'Password saat ini tidak sesuai.');
+            return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.']);
         }
 
-        $admin->update(['password' => $request->password]);
-        return back()->with('success', 'Password berhasil diubah.');
+        if (Hash::check($request->password, $admin->password)) {
+            return back()->withErrors(['password' => 'Password telah digunakan sebelumnya.']);
+        }
+
+        $admin->update(['password' => Hash::make($request->password)]);
+        return back()->with('success', 'Password telah diperbarui.');
     }
 
     public function updateProfil(Request $request)

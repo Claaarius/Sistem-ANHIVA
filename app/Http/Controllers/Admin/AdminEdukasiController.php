@@ -51,6 +51,7 @@ class AdminEdukasiController extends Controller
             'kategori' => $request->kategori,
             'isi_materi' => $request->isi_materi,
             'tanggal_publish' => $request->tanggal_publish,
+            'tampilkan_di_dashboard' => $request->has('tampilkan_di_dashboard'),
         ];
 
         if ($request->hasFile('thumbnail')) {
@@ -84,6 +85,7 @@ class AdminEdukasiController extends Controller
         ]);
 
         $data = $request->only('judul', 'kategori', 'isi_materi', 'tanggal_publish');
+        $data['tampilkan_di_dashboard'] = $request->has('tampilkan_di_dashboard');
 
         if ($request->hasFile('thumbnail')) {
             $request->validate(['thumbnail' => 'image|mimes:jpeg,png,jpg,webp|max:5120']);

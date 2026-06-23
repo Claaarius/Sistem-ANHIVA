@@ -50,7 +50,10 @@
 
 <!-- Hero Section Management -->
 <div class="card mb-xl">
-    <div class="card-header"><h4 style="margin-bottom:0;"><i class="fas fa-star" style="color:var(--amber-400);"></i> Kelola Hero Section</h4></div>
+    <div class="card-header d-flex justify-between align-center">
+        <h4 style="margin-bottom:0;"><i class="fas fa-star" style="color:var(--amber-400);"></i> Kelola Hero Section</h4>
+        <a href="{{ route('admin.edukasi.index') }}" class="btn btn-sm btn-outline"><i class="fas fa-book-open"></i> Kelola Edukasi Terbaru</a>
+    </div>
     <div class="card-body">
         <form method="POST" action="{{ route('admin.dashboard.hero') }}">
             @csrf
@@ -87,24 +90,32 @@
         </button>
     </div>
     <div class="card-body">
+        @error('fakta')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         @foreach($faktaHiv as $f)
         <div class="fact-card mb-md">
-            <form method="POST" action="{{ route('admin.dashboard.fakta.update', $f->id_konten) }}" class="d-flex gap-md align-center flex-wrap">
-                @csrf
-                @method('PUT')
-                <div style="flex:1;">
-                    <input type="text" name="judul" class="form-control mb-sm" value="{{ $f->judul }}" required style="font-weight:700;">
-                    <textarea name="konten" class="form-control mb-sm" rows="2" required>{{ $f->konten }}</textarea>
-                    <input type="text" name="sumber" class="form-control" value="{{ $f->sumber }}" placeholder="Sumber data (opsional)">
+            <div class="fact-item d-flex gap-md flex-wrap" style="align-items:flex-start;">
+                <form id="updateFakta-{{ $f->id_konten }}" method="POST" action="{{ route('admin.dashboard.fakta.update', $f->id_konten) }}" class="fact-edit-form" style="flex:1 1 560px; min-width:280px;">
+                    @csrf
+                    @method('PUT')
+                    <div>
+                        <input type="text" name="judul" class="form-control mb-sm" value="{{ $f->judul }}" required style="font-weight:700;">
+                        <textarea name="konten" class="form-control mb-sm" rows="2" required>{{ $f->konten }}</textarea>
+                        <input type="text" name="sumber" class="form-control" value="{{ $f->sumber }}" placeholder="Sumber data (opsional)">
+                    </div>
+                </form>
+                <div class="fact-controls d-flex flex-column justify-between" style="min-width:180px;">
+                    <div class="fact-actions d-flex gap-sm justify-end flex-wrap" style="margin-top:var(--space-sm); width:100%;">
+                        <button type="submit" form="updateFakta-{{ $f->id_konten }}" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                        <form method="POST" action="{{ route('admin.dashboard.fakta.destroy', $f->id_konten) }}" class="fact-delete-form" onsubmit="return confirm('Yakin hapus fakta ini?')" style="margin:0;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Hapus</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="d-flex gap-sm" style="flex-shrink:0;">
-                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i></button>
-                    <form method="POST" action="{{ route('admin.dashboard.fakta.destroy', $f->id_konten) }}" style="display:inline;" onsubmit="return confirm('Yakin hapus fakta ini?')">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                    </form>
-                </div>
-            </form>
+            </div>
         </div>
         @endforeach
     </div>

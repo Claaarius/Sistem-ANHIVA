@@ -31,7 +31,14 @@ class DashboardController extends Controller
         $faktaHiv = DashboardKonten::faktaHiv()->get();
 
         // Latest education materials
-        $materiTerbaru = MateriEdukasi::orderBy('tanggal_publish', 'desc')->take(4)->get();
+        $materiTerbaru = MateriEdukasi::where('tampilkan_di_dashboard', true)
+            ->orderBy('tanggal_publish', 'desc')
+            ->take(3)
+            ->get();
+            
+        if ($materiTerbaru->isEmpty()) {
+            $materiTerbaru = MateriEdukasi::orderBy('tanggal_publish', 'desc')->take(3)->get();
+        }
 
         // Gallery
         $gallery = Gallery::orderBy('tanggal_upload', 'desc')->take(6)->get();

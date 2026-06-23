@@ -8,24 +8,61 @@
 
 @section('content')
 <!-- Aggregate Stats -->
+<!-- Aggregate Stats -->
 <div class="grid grid-4 mb-xl">
+
+    <!-- Total Skrining -->
     <div class="stat-card">
-        <div class="stat-icon teal"><i class="fas fa-clipboard-check"></i></div>
-        <div class="stat-number">{{ $stats['total'] }}</div>
-        <div class="stat-label">Total Skrining</div>
+        <div class="stat-icon teal">
+            <i class="fas fa-clipboard-check"></i>
+        </div>
+        <div class="stat-number">
+            {{ $stats['total'] }}
+        </div>
+        <div class="stat-label">
+            Total Skrining
+        </div>
     </div>
+
+    <!-- Risiko Rendah -->
     <div class="stat-card">
-        <div class="stat-number" style="color:var(--risk-low-text);">{{ $stats['rendah'] }}</div>
-        <div class="stat-label">Risiko Rendah</div>
+        <div class="stat-icon success">
+            <i class="fas fa-shield-heart"></i>
+        </div>
+        <div class="stat-number" style="color:var(--risk-low-text);">
+            {{ $stats['rendah'] }}
+        </div>
+        <div class="stat-label">
+            Risiko Rendah
+        </div>
     </div>
+
+    <!-- Risiko Sedang -->
     <div class="stat-card">
-        <div class="stat-number" style="color:var(--risk-med-text);">{{ $stats['sedang'] }}</div>
-        <div class="stat-label">Risiko Sedang</div>
+        <div class="stat-icon warning">
+            <i class="fas fa-triangle-exclamation"></i>
+        </div>
+        <div class="stat-number" style="color:var(--risk-med-text);">
+            {{ $stats['sedang'] }}
+        </div>
+        <div class="stat-label">
+            Risiko Sedang
+        </div>
     </div>
+
+    <!-- Risiko Tinggi -->
     <div class="stat-card">
-        <div class="stat-number" style="color:var(--risk-high-text);">{{ $stats['tinggi'] }}</div>
-        <div class="stat-label">Risiko Tinggi</div>
+        <div class="stat-icon danger">
+            <i class="fas fa-circle-exclamation"></i>
+        </div>
+        <div class="stat-number" style="color:var(--risk-high-text);">
+            {{ $stats['tinggi'] }}
+        </div>
+        <div class="stat-label">
+            Risiko Tinggi
+        </div>
     </div>
+
 </div>
 
 <!-- Questions List -->

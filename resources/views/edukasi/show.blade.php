@@ -10,11 +10,14 @@
         <div class="grid" style="grid-template-columns:68% 30%; gap:2%;">
             <div class="card fade-in">
                 <div style="height:300px; background:linear-gradient(135deg, var(--teal-700), var(--teal-400)); display:flex; align-items:center; justify-content:center;">
-                    @if($materi->thumbnail && Storage::disk('public')->exists($materi->thumbnail))
-                        <img src="{{ asset('storage/' . $materi->thumbnail) }}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23E1F5EE\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%231D9E75\' font-size=\'48\'%3E📷%3C/text%3E%3C/svg%3E';" alt="{{ $materi->judul }}" style="width:100%; height:100%; object-fit:cover;">
-                    @else
-                        <i class="fas fa-book-open" style="font-size:4rem; color:#fff;"></i>
-                    @endif
+                    @if($materi->thumbnail)
+                         <img src="{{ $materi->thumbnail }}"
+                            alt="{{ $materi->judul }}"
+                            style="width:100%; height:100%; object-fit:cover;"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-book-open\' style=\'font-size:4rem;color:#fff;\'></i>';">
+                        @else
+                            <i class="fas fa-book-open" style="font-size:4rem; color:#fff;"></i>
+                        @endif
                 </div>
                 <div class="card-body" style="padding: var(--space-2xl);">
                     <h1 style="font-size:1.8rem; margin-bottom:var(--space-sm);">{{ $materi->judul }}</h1>

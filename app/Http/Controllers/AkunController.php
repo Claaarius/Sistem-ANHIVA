@@ -61,8 +61,12 @@ class AkunController extends Controller
             return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.']);
         }
 
+        if (Hash::check($request->password, $pengguna->password)) {
+            return back()->withErrors(['password' => 'Password telah digunakan sebelumnya.']);
+        }
+
         $pengguna->update(['password' => Hash::make($request->password)]);
-        return back()->with('success', 'Password berhasil diubah.');
+        return back()->with('success', 'Password telah diperbarui.');
     }
 
     public function destroy(Request $request)

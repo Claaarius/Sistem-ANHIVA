@@ -20,11 +20,24 @@ class KonselingController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'jenis' => 'required|in:Online,Tatap Muka',
-        'alasan' => 'required|string',
-    ]);
+    {
+        $request->validate(
+            [
+
+            'jenis' => 'required|in:Online,Tatap Muka',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan,Non-binary',
+            'alasan' => 'required|string',
+            'nomor_kontak' => 'required_if:jenis,Online',
+        ],
+        [
+            'jenis.required' => 'Jenis konseling harus dipilih.',
+            'jenis.in' => 'Jenis konseling tidak valid.',
+            'jenis_kelamin.required' => 'Jenis kelamin harus dipilih.',
+            'jenis_kelamin.in' => 'Jenis kelamin tidak valid.',
+            'alasan.required' => 'Alasan pengajuan harus diisi.',
+            'nomor_kontak.required_if' => 'Nomor kontak harus diisi untuk konseling online.',
+        ]
+        );
 
     $kodeUnik = session('kode_unik');
     if (!$kodeUnik) {
@@ -35,6 +48,7 @@ class KonselingController extends Controller
     Konseling::create([
         'id_pengguna' => auth()->check() ? auth()->user()->id_pengguna : null,
         'kode_unik' => $kodeUnik,
+        'jenis_kelamin' => $request->jenis_kelamin,
         'alasan' => $request->alasan,
         'jenis' => $request->jenis,
         'nomor_kontak' => $request->nomor_kontak,
@@ -49,23 +63,37 @@ class KonselingController extends Controller
 
     public function catatan(Request $request)
     {
+        $catatan = null;
+
         if (auth()->check()) {
-            $catatan = CatatanKonseling::where('kode_unik', auth()->user()->kode_unik)
-                ->with('konseling')
+            // Pengguna yang login - ambil dari relasi Konseling -> Pengguna
+            $kode = auth()->user()->kode_unik;
+            if ($kode) {
+                $catatan = CatatanKonseling::whereHas('konseling', function ($q) use ($kode) {
+                    $q->where('kode_unik', $kode);
+                })
                 ->orderBy('tanggal_catatan', 'desc')
                 ->get();
+            }
             return view('konseling.catatan', compact('catatan'));
         }
 
+        // Pengunjung anonim - cari berdasarkan kode_unik di form
         if ($request->has('kode_unik')) {
-            $catatan = CatatanKonseling::where('kode_unik', $request->kode_unik)
-                ->with('konseling')
-                ->orderBy('tanggal_catatan', 'desc')
-                ->get();
-            return view('konseling.catatan', compact('catatan'));
+            $request->validate(['kode_unik' => 'required|string']);
+            
+            $catatan = CatatanKonseling::whereHas('konseling', function ($q) use ($request) {
+                $q->where('kode_unik', $request->kode_unik);
+            })
+            ->orderBy('tanggal_catatan', 'desc')
+            ->get();
+
+            if ($catatan->isEmpty()) {
+                return back()->withErrors(['kode_unik' => 'Catatan konseling tidak ditemukan.'])->withInput();
+            }
         }
 
-        return view('konseling.catatan', ['catatan' => null]);
+        return view('konseling.catatan', compact('catatan'));
     }
 
     public function riwayatPengajuan()
@@ -81,6 +109,11 @@ class KonselingController extends Controller
     {
         $request->validate(['kode_unik' => 'required|string']);
         $riwayat = Konseling::where('kode_unik', $request->kode_unik)->orderBy('tanggal_pengajuan', 'desc')->get();
+        
+        if ($riwayat->isEmpty()) {
+            return back()->withErrors(['kode_unik' => 'Data riwayat konseling tidak ditemukan.']);
+        }
+        
         return view('konseling.riwayat-pengajuan', compact('riwayat'))->with('searched_kode', $request->kode_unik);
     }
 

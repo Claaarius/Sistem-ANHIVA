@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use App\Models\DashboardKonten;
 use App\Models\Skrining;
 use App\Models\Pengguna;
@@ -73,13 +74,23 @@ class AdminDashboardController extends Controller
 
     public function updateFakta(Request $request, $id)
     {
-        $fakta = DashboardKonten::findOrFail($id);
         $request->validate([
             'judul' => 'required|string',
             'konten' => 'required|string',
+            'sumber' => 'nullable|string',
         ]);
 
+        $fakta = DashboardKonten::find($id);
+        if (!$fakta && Schema::hasColumn('dashboard_konten', 'slug')) {
+            $fakta = DashboardKonten::where('slug', $id)->first();
+        }
+
+        if (!$fakta) {
+            return back()->withErrors(['fakta' => 'Data Fakta HIV tidak ditemukan.']);
+        }
+
         $fakta->update($request->only('judul', 'konten', 'sumber'));
+
         return back()->with('success', 'Fakta HIV berhasil diperbarui.');
     }
 

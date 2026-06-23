@@ -159,11 +159,25 @@ class SkriningController extends Controller
 
         // Anonymous: require code
         if ($request->has('kode_unik')) {
-            $riwayat = Skrining::where('kode_unik', $request->kode_unik)
-                ->orderBy('tanggal_skrining', 'desc')
-                ->paginate(10);
-            return view('skrining.riwayat', compact('riwayat'));
-        }
+
+    $request->validate([
+        'kode_unik' => 'required|string'
+    ]);
+
+    $riwayat = Skrining::where('kode_unik', $request->kode_unik)
+        ->orderBy('tanggal_skrining', 'desc')
+        ->paginate(10);
+
+    if ($riwayat->total() === 0) {
+        return back()
+            ->withErrors([
+                'kode_unik' => 'Data riwayat skrining tidak ditemukan.'
+            ])
+            ->withInput();
+    }
+
+    return view('skrining.riwayat', compact('riwayat'));
+}
 
         return view('skrining.riwayat', ['riwayat' => null]);
     }

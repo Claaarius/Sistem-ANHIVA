@@ -15,7 +15,29 @@ class AdminLaporanController extends Controller
 {
     public function index()
     {
-        return view('admin.laporan');
+        $totalPengguna = Pengguna::count();
+        $totalSkrining = Skrining::count();
+        $totalKonseling = Konseling::count();
+        $totalKomentar = \App\Models\Komentar::count();
+        $totalEdukasi = \App\Models\MateriEdukasi::count();
+        $totalGallery = \App\Models\Gallery::count();
+
+        // Data terbaru
+        $latestSkrining = Skrining::with('pengguna')->latest('tanggal_skrining')->limit(5)->get();
+        $latestKonseling = Konseling::with('pengguna')->latest('tanggal_pengajuan')->limit(5)->get();
+        $latestKomentar = \App\Models\Komentar::with('pengguna')->latest('tanggal_komentar')->limit(5)->get();
+
+        return view('admin.laporan', compact(
+            'totalPengguna',
+            'totalSkrining',
+            'totalKonseling',
+            'totalKomentar',
+            'totalEdukasi',
+            'totalGallery',
+            'latestSkrining',
+            'latestKonseling',
+            'latestKomentar'
+        ));
     }
 
     private function getData(string $jenis, int $bulan, int $tahun): array

@@ -20,12 +20,13 @@ use App\Http\Controllers\Admin\AdminLaporanController;
 use App\Http\Controllers\Admin\AdminGalleryController;
 
 /*
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------
 | User Routes
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------
 */
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/tentang', function () { return view('tentang'); })->name('tentang');
 
 // Auth User
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -45,6 +46,11 @@ Route::get('/skrining/mulai', [SkriningController::class, 'mulai'])->name('skrin
 Route::post('/skrining/jawaban', [SkriningController::class, 'simpanJawaban'])->name('skrining.jawaban');
 Route::get('/skrining/hasil/{id}', [SkriningController::class, 'hasil'])->name('skrining.hasil');
 Route::get('/skrining/riwayat', [SkriningController::class, 'riwayat'])->name('skrining.riwayat');
+
+Route::post('/skrining/batalkan-session', function() {
+    session()->forget(['skrining_pertanyaan', 'skrining_jawaban', 'skrining_current', 'kode_unik']);
+    return response()->json(['success' => true]);
+})->name('skrining.batalkan.session');
 
 // Konseling
 Route::get('/konseling', [KonselingController::class, 'index'])->name('konseling.index');

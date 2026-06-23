@@ -15,6 +15,7 @@ class MateriEdukasi extends Model
         'isi_materi',
         'kategori',
         'thumbnail',
+        'tampilkan_di_dashboard',
         'tanggal_publish',
     ];
 
